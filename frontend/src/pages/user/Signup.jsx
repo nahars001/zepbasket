@@ -119,7 +119,7 @@ const Signup = () => {
                 <p className="text-center text-black mb-0">
                   Already have account?{" "}
                   <Link
-                    href="/login"
+                    to={"/login"}
                     className="text-decoration-none fw-medium text-gn"
                   >
                     Signin here

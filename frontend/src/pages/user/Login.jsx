@@ -86,12 +86,12 @@ const Login = () => {
               <div className="pt-3">
                 <p className="text-center text-black mb-0">
                   Don't have account?{" "}
-                  <a
-                    href="/register"
+                  <Link
+                    to={"/register"}
                     className="text-decoration-none fw-medium text-gn"
                   >
                     Signup here
-                  </a>
+                  </Link>
                 </p>
               </div>
             </div>
