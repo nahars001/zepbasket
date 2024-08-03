@@ -48,7 +48,7 @@ const Products = ({ title, productData, isLoading }) => {
       <p className="text-center fs-2 pt-2 pb-2">{title}</p>
       <div className="row">
         {
-          productData.map((product) => (
+          productData?.map((product) => (
             <div className="col-md-3 p-2 col-6">
               <div className="shadow rounded ">
                 <div className="position-relative product-image-body">

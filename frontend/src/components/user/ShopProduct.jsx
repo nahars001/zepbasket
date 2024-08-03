@@ -47,7 +47,7 @@ if (isLoading) {
 }
   return (
     <>{
-      data.product.map((product) => (
+      data?.product?.map((product) => (
         <div className="col-md-4 p-2 col-6">
           <div className="shadow rounded ">
             <div className="position-relative product-image-body">
