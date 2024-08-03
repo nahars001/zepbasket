@@ -18,9 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 const MODE = process.env.NODE_ENV;
 const PORT = process.env.PORT || 8000;
 
-if (MODE == "development") {
-  dotenv.config({ path: "./backend/config/.env" });
-}
+dotenv.config({ path: "./backend/config/.env" });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,7 +36,7 @@ app.use(errorMiddleware);
 
 if (process.env.NODE_ENV == "production") {
   app.use(express.static(path.join(__dirname, "../frontend/build")));
-  app.get((req, res) => {
+  app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
   });
 }
