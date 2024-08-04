@@ -18,7 +18,9 @@ app.use(express.urlencoded({ extended: true }));
 const MODE = process.env.NODE_ENV;
 const PORT = process.env.PORT || 8000;
 
-dotenv.config({ path: "./backend/config/.env" });
+if (MODE == "development") {
+  dotenv.config({ path: "./backend/config/.env" });
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
