@@ -44,16 +44,10 @@ const registerUser = CatchAsyncError(async (req, res, next) => {
   if (!user) {
     return next(new errorHandler(message, 404));
   }
-  if (process.env.NODE_ENV == "production") {
-    res.cookie("token", token, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000),
-    });
-  } else {
-    res.cookie("token", token, {
-      expires: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000),
-    });
-  }
+
+  res.cookie("token", token, {
+    expires: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000),
+  });
 
   res.status(200).json({
     message: "User created successfully",
