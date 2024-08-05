@@ -12,6 +12,14 @@ const AdminDashboardLayout = ({ children, isOpen, setIsOpen }) => {
             name: "Products", icon: "fa-store", subMenu: [
                 { name: "All Product", url: "/admin/products" },
                 { name: "Add New Product", url: "/admin/product/create" },
+
+            ]
+        },
+        {
+            name: "Category", icon: "fa-tag", subMenu: [
+                { name: "All Categories", url: "/admin/categories" },
+                { name: "Add New Category", url: "/admin/category/create" },
+
             ]
         },
         {

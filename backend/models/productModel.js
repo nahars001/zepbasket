@@ -37,6 +37,24 @@ const productSchema = new Schema(
         },
       },
     ],
+    category: {
+      name: {
+        type: String,
+      },
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category",
+      },
+    },
+    subCategory: {
+      name: {
+        type: String,
+      },
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category",
+      },
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

@@ -4,12 +4,15 @@ import { useNavigate, useParams } from 'react-router-dom'
 import Loader from '../../components/user/Loader'
 import toast from 'react-hot-toast'
 import MetaData from '../../components/MetaData'
+import EditProductPreviewImg from '../../components/admin/EditProductPreviewImg'
+import ProductCategoryHandler from '../../components/admin/ProductCategoryHandler'
 
 const EditProduct = () => {
     const navigate = useNavigate()
     const { id } = useParams()
     const { data, isError, isLoading, isSuccess, error } = useProductQuery(id)
     const [updateProduct, { data: updateProductData, isError: updateProductIsError, isLoading: updateProductIsLoading, isSuccess: updateProductIsSuccess, error: updateProductError }] = useUpdateProductMutation()
+
 
     const [productInfo, setProductInfo] = useState({
         name: "",
@@ -18,12 +21,17 @@ const EditProduct = () => {
         description: "",
     })
 
-
-
-
     const [images, setImages] = useState([])
     const [oldImages, setOldImages] = useState([])
     const [previewImg, setPreviewImg] = useState([])
+    const [category, setCategory] = useState({
+        id: "",
+        name: ""
+    })
+    const [subCat, setSubCat] = useState({
+        id: "",
+        name: ""
+    })
 
     useEffect(() => {
         if (isSuccess) {
@@ -42,8 +50,19 @@ const EditProduct = () => {
                 setOldImages((oldArray) => [...oldArray, {
                     name: img.filename,
                 }])
+
+
+            })
+            setCategory({
+                id: data?.product?.category.id || "",
+                name: data?.product?.category.name || "",
+            })
+            setSubCat({
+                id: data?.product?.subCategory?.id || "",
+                name: data?.product?.subCategory?.name || "",
             })
         }
+
 
         if (updateProductIsError) {
             toast.error(updateProductError.data.message)
@@ -59,13 +78,26 @@ const EditProduct = () => {
         setProductInfo({ ...productInfo, [e.target.name]: e.target.value })
     }
 
+
     const submitHandler = async (e) => {
         e.preventDefault()
+
+        console.log(category);
+        console.log(subCat);
+
         const fd = new FormData()
         fd.append("name", productInfo.name)
         fd.append("stock", productInfo.stock)
         fd.append("price", productInfo.price)
         fd.append("description", productInfo.description)
+        fd.append("categoryName", category.name)
+        fd.append("categoryID", category.id)
+
+        if (subCat.name != "") {
+
+            fd.append("subCategoryName", subCat.name)
+            fd.append("subCategoryID", subCat.id)
+        }
         oldImages.map((img) => fd.append("oldImages", img.name))
         images.map((img) => fd.append("productImage", img.img))
 
@@ -73,37 +105,6 @@ const EditProduct = () => {
         await updateProduct({ id, body: fd })
     }
 
-    const imageHandler = (e) => {
-        let files = e.target.files
-
-        Array.from(files).forEach((img) => {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-            setImages((oldArray) => [...oldArray, {
-                name: uniqueSuffix,
-                img,
-
-            }])
-            setPreviewImg((oldArray) => [...oldArray, {
-                name: uniqueSuffix,
-                url: URL.createObjectURL(img),
-                imgType: "newImage"
-            }])
-        })
-
-
-    }
-
-
-    const deleteImageHandler = ({ filename, imgType }) => {
-        const filteredImage = images.filter((img) => img.name != filename);
-        const filteredPreviewImage = previewImg.filter((img) => img.name != filename);
-        setPreviewImg(filteredPreviewImage);
-        setImages(filteredImage)
-        if (imgType == "oldImage") {
-            const filteredOldImage = oldImages.filter((img) => img.name != filename);
-            setOldImages(filteredOldImage)
-        }
-    }
 
     if (isLoading) {
         return <Loader />
@@ -169,32 +170,8 @@ const EditProduct = () => {
                                     onChange={(e) => inputHandler(e)}
                                 />
                             </div>
-                            <div className="pt-3">
-                                <label htmlFor="" className="form-label fw-bold">
-                                    Product Image
-                                </label>
-                                <input
-                                    className="form-control rounded-0"
-                                    type="file"
-                                    name="image"
-                                    value={productInfo.image}
-                                    placeholder="Please Enter Your Product Image"
-                                    multiple
-                                    onChange={(e) => imageHandler(e)}
-                                />
-                            </div>
-                            <div className='pt-3 row'>
-                                {previewImg.length != 0 ? previewImg.map((img) => (
-                                    <div className='col-3 p-2'>
-                                        <div className='previewImg cursor-pointer' onClick={() => deleteImageHandler({ filename: img.name, imgType: img.imgType })}>
-                                            <img src={img.url} className='img-fluid previewImgSrc' alt="" />
-                                            <div className='previewImgDelete'>
-                                                <i className='fa-solid fa-x fa-2x'></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )) : ""}
-                            </div>
+                            <ProductCategoryHandler category={category} subCat={subCat} setCategory={setCategory} setSubCat={setSubCat} />
+                            <EditProductPreviewImg images={images} oldImages={oldImages} previewImg={previewImg} setPreviewImg={setPreviewImg} setImages={setImages} setOldImages={setOldImages} />
                             <div className="pt-3">
                                 <button className="auth-btn bg-gn" onClick={submitHandler}>
                                     Edit Product

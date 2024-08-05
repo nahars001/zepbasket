@@ -6,6 +6,7 @@ import productRoute from "./routes/productRoute.js";
 import orderRoute from "./routes/orderRoute.js";
 import checkoutRoute from "./routes/checkoutRoute.js";
 import adminRoute from "./routes/adminRoute.js";
+import categoryRoute from "./routes/categoryRoute.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -34,6 +35,7 @@ app.use("/api/v1/product", productRoute);
 app.use("/api/v1/order", orderRoute);
 app.use("/api/v1/cart", checkoutRoute);
 app.use("/api/v1/admin", adminRoute);
+app.use("/api/v1/category", categoryRoute);
 app.use(errorMiddleware);
 
 if (process.env.NODE_ENV == "production") {

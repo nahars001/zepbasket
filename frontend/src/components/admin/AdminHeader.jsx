@@ -26,8 +26,6 @@ const AdminHeader = ({ setIsOpen, isOpen }) => {
     }
   }, [isAuthorized, cartData])
 
-  console.log(window.innerWidth);
-
   const isOpenHandler = () => {
     setIsOpen(!isOpen)
   }

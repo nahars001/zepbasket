@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Breadcrumb from "../../components/user/Breadcrumb";
 import ShopProduct from "../../components/user/ShopProduct";
 import ShopRatingFilter from "../../components/user/ShopRatingFilter";
@@ -7,6 +7,7 @@ import ShopCategoryFilter from "../../components/user/ShopCategoryFilter";
 import MetaData from "../../components/MetaData";
 
 const Shop = () => {
+ 
 
   return (
     <div>
@@ -21,7 +22,7 @@ const Shop = () => {
           <div className="col-md-3">
             <p className="fs-3 mb-0">Filter</p>
             <div className="p-2 mt-2 border border-1">
-              <ShopCategoryFilter />
+              <ShopCategoryFilter/>
               <ShopRatingFilter />
               <ShopPriceFliter />
             </div>

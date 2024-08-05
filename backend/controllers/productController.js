@@ -5,13 +5,21 @@ import errorHandler from "../utils/errorHandler.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import * as fs from "fs";
-import { log } from "console";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const createProduct = CatchAsyncError(async (req, res, next) => {
-  const { name, price, description, stock } = req.body;
+  let {
+    name,
+    price,
+    description,
+    stock,
+    categoryName,
+    categoryID,
+    subCategoryName,
+    subCategoryID,
+  } = req.body;
 
   let images = [];
   let productImages = req.files;
@@ -22,6 +30,8 @@ const createProduct = CatchAsyncError(async (req, res, next) => {
       filename: file.filename,
     });
   });
+
+  console.log(description);
 
   const user = req.user._id;
   const sellerName = req.user.name;
@@ -47,9 +57,19 @@ const createProduct = CatchAsyncError(async (req, res, next) => {
     images,
     user,
     sellerName,
+    category: {
+      name: categoryName,
+      id: categoryID,
+    },
+    subCategory: {
+      name: subCategoryName,
+      id: subCategoryID,
+    },
     noOfReview: 0,
     rating: 0,
   });
+
+  console.log(product);
 
   if (!product) {
     return next(new errorHandler(message, 404));
@@ -80,7 +100,17 @@ const getProduct = CatchAsyncError(async (req, res, next) => {
 const updateProduct = CatchAsyncError(async (req, res, next) => {
   const _id = req.params.id;
 
-  let { name, price, stock, description, oldImages } = req.body;
+  let {
+    name,
+    price,
+    stock,
+    description,
+    oldImages,
+    categoryName,
+    categoryID,
+    subCategoryName,
+    subCategoryID,
+  } = req.body;
   const files = req.files;
   if (!mongoose.Types.ObjectId.isValid(_id)) {
     return next(new errorHandler("Please enter vaild product id", 404));
@@ -143,6 +173,24 @@ const updateProduct = CatchAsyncError(async (req, res, next) => {
     description,
     images,
   };
+
+  if (categoryID != undefined) {
+    updatedProductInfo.category = {
+      name: categoryName,
+      id: categoryID,
+    };
+  }
+
+  if (subCategoryID != undefined) {
+    updatedProductInfo.subCategory = {
+      name: subCategoryName,
+      id: subCategoryID,
+    };
+  } else {
+    if (product.category != categoryID) {
+      updatedProductInfo.subCategory = "";
+    }
+  }
 
   const result = await productModel.findByIdAndUpdate(_id, updatedProductInfo);
   if (!result) {

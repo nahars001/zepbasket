@@ -11,8 +11,6 @@ import MetaData from '../../components/MetaData'
 const ProductPage = () => {
     const { id } = useParams()
     const { data, isLoading, isError, isSuccess } = useProductQuery(id)
-
-    console.log(data);
     const [defaultImage, setDefaultImage] = useState("")
     const changeImage = (img) => {
         setDefaultImage(img)
@@ -67,7 +65,7 @@ const ProductPage = () => {
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <ProductMeta name={data?.product.name} price={data?.product.price} description={data?.product.description} noOfReview={data?.product.noOfReview} productId={data?.product._id} stock={data?.product.stock} />
+                        <ProductMeta name={data?.product.name} price={data?.product.price} categoryName={data?.product.category.name} description={data?.product.description} noOfReview={data?.product.noOfReview} productId={data?.product._id} stock={data?.product.stock} />
                     </div>
                 </div>
             </div>

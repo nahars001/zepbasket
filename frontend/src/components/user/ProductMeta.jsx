@@ -3,7 +3,7 @@ import { useCreateCartMutation, useUpdateCartMutation } from '../../redux/api/Ca
 import toast from 'react-hot-toast'
 import StarRatings from 'react-star-ratings'
 
-const ProductMeta = ({ name, price, description, productId, noOfReview, stock }) => {
+const ProductMeta = ({ name, price, categoryName, description, productId, noOfReview, stock }) => {
     const [updateCart, { data: updateCartData, isError: updateCartIsError, error: updateCartError, isSuccess: updateCartIsSuccess }] = useUpdateCartMutation()
     const [createCart, { data: createCartData, isError: createCartIsError, error: createCartError, isSuccess: createCartIsSuccess }] = useCreateCartMutation()
     const [cartQty, setCartQty] = useState(1)
@@ -50,6 +50,7 @@ const ProductMeta = ({ name, price, description, productId, noOfReview, stock })
             <div>
                 <p className='fs-3 text-uppercase'>{name}</p>
                 <p className='fs-4 text-danger'>${price}</p>
+                <p >{categoryName}</p>
                 <div className="border-top border-bottom mt-2 mb-2">
                     <p className='fw-bold pt-2'>Product Description</p>
                     <p className='pt-1'>{description}</p>

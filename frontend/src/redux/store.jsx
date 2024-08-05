@@ -6,6 +6,7 @@ import { UserAPI } from "./api/UserAPI";
 import { CartAPI } from "./api/CartAPI";
 import { OrderAPI } from "./api/OrderAPI";
 import { AdminAPI } from "./api/AdminAPI";
+import { CategoryAPI } from "./api/CategoryAPI";
 
 
 const store = configureStore({
@@ -17,6 +18,7 @@ const store = configureStore({
     [CartAPI.reducerPath]: CartAPI.reducer,
     [OrderAPI.reducerPath]: OrderAPI.reducer,
     [AdminAPI.reducerPath]: AdminAPI.reducer,
+    [CategoryAPI.reducerPath]: CategoryAPI.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(
@@ -25,6 +27,7 @@ const store = configureStore({
       UserAPI.middleware,
       CartAPI.middleware,
       OrderAPI.middleware,
+      CategoryAPI.middleware,
       AdminAPI.middleware
     );
   },

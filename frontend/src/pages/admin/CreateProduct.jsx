@@ -2,65 +2,55 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useCreateProductMutation } from '../../redux/api/ProductAPI'
 import toast from "react-hot-toast"
 import MetaData from '../../components/MetaData'
+import AddProductPreviewImg from '../../components/admin/AddProductPreviewImg'
+import { useGetAllCategoryQuery, useLazyGetSubCategoryQuery } from '../../redux/api/CategoryAPI'
+import { useNavigate } from "react-router-dom"
+import ProductCategoryHandler from '../../components/admin/ProductCategoryHandler'
 
 const CreateProduct = () => {
     const ref = useRef()
+    const navigate = useNavigate()
     const [createProduct, { data, isLoading, isError, isSuccess, error }] = useCreateProductMutation()
+    const [subCategory, { data: subCategoryData, isSuccess: subCategoryIsSuucess, isError: subCategoryIsError, error: subCategoryError }] = useLazyGetSubCategoryQuery()
+    const { data: CategoryData, isSuccess: CategoryisSuccess } = useGetAllCategoryQuery()
 
     const [productInfo, setProductInfo] = useState({
         name: "",
         price: "",
         stock: "",
         description: "",
+        category: "",
+        subCategory: ""
     })
     const [images, setImages] = useState([])
     const [previewImg, setPreviewImg] = useState([])
+    const [category, setCategory] = useState({
+        id: "",
+        name: ""
+    })
+    const [subCat, setSubCat] = useState({
+        id: "",
+        name: ""
+    })
 
     const inputHandler = (e) => {
         setProductInfo({ ...productInfo, [e.target.name]: e.target.value })
     }
 
-    const imageHandler = (e) => {
-        let files = e.target.files
-
-        Array.from(files).forEach((img) => {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-            setImages((oldArray) => [...oldArray, {
-                name: uniqueSuffix,
-                img
-            }])
-            setPreviewImg((oldArray) => [...oldArray, {
-                name: uniqueSuffix,
-                url: URL.createObjectURL(img)
-            }])
-        })
 
 
-    }
-
-    const deleteImageHandler = (filename) => {
-        const filteredImage = images.filter((img) => img.name != filename);
-        const filteredPreviewImage = previewImg.filter((img) => img.name != filename);
-        setPreviewImg(filteredPreviewImage);
-        setImages(filteredImage)
-    }
     useEffect(() => {
         if (isSuccess) {
-            toast.success(data.message)
-            setProductInfo({
-                name: "",
-                price: "",
-                stock: "",
-                description: "",
-            })
-            ref.current.value = ""
-            setImages([])
-            setPreviewImg([])
+            navigate("/admin/products")
         }
         if (isError) {
             toast.error(error.data.message)
         }
     }, [isError, isSuccess])
+
+    let Categories = CategoryData?.categories.filter((category) => {
+        return category.parentCategory == undefined
+    })
 
     const submitHandler = async (e) => {
         e.preventDefault()
@@ -69,6 +59,13 @@ const CreateProduct = () => {
         fromdata.append("price", productInfo.price)
         fromdata.append("stock", productInfo.stock)
         fromdata.append("description", productInfo.description)
+        fromdata.append("categoryName", category.name)
+        fromdata.append("categoryID", category.id)
+        if (subCat.name != "") {
+
+            fromdata.append("subCategoryName", subCat.name)
+            fromdata.append("subCategoryID", subCat.id)
+        }
         images?.map((img) => fromdata.append("productImage", img.img))
 
         await createProduct({ body: fromdata })
@@ -133,32 +130,8 @@ const CreateProduct = () => {
                                     onChange={(e) => inputHandler(e)}
                                 />
                             </div>
-                            <div className="pt-3">
-                                <label htmlFor="" className="form-label fw-bold">
-                                    Product Image
-                                </label>
-                                <input
-                                    className="form-control rounded-0"
-                                    type="file"
-                                    name="image"
-                                    ref={ref}
-                                    placeholder="Please Enter Your Product Image"
-                                    multiple
-                                    onChange={(e) => imageHandler(e)}
-                                />
-                            </div>
-                            <div className='pt-3 row'>
-                                {previewImg.length != 0 ? previewImg.map((img) => (
-                                    <div className='col-3 p-2'>
-                                        <div className='previewImg cursor-pointer' onClick={() => deleteImageHandler(img.name)}>
-                                            <img src={img.url} className='img-fluid previewImgSrc' alt="" />
-                                            <div className='previewImgDelete'>
-                                                <i className='fa-solid fa-x fa-2x'></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )) : ""}
-                            </div>
+                            <ProductCategoryHandler category={category} subCat={subCat} setCategory={setCategory} setSubCat={setSubCat} />
+                            <AddProductPreviewImg images={images} previewImg={previewImg} setImages={setImages} setPreviewImg={setPreviewImg} ref={ref} />
                             <div className="pt-3">
                                 <button className="auth-btn bg-gn" disabled={isLoading} onClick={submitHandler}>
                                     Add New Product

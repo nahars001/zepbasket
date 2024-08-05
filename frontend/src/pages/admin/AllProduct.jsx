@@ -42,6 +42,16 @@ const AllProduct = () => {
         sort: "asc"
       },
       {
+        label: "Category",
+        field: "category",
+        sort: "asc"
+      },
+      {
+        label: "Sub category",
+        field: "subCategory",
+        sort: "asc"
+      },
+      {
         label: "Actions",
         field: "actions",
         sort: "disabled",
@@ -69,11 +79,15 @@ const AllProduct = () => {
 
   data?.product?.map((product, index) => {
 
+    const imgURL = product.images.length == 0 ? defalut_product_image : `/assets/img/${product?.images[0]?.filename}`
+
     productData?.rows.push({
       id: product._id,
-      name: product.name.length > 15 ? `${product.name.substring(0,15)}...` : product.name,
-      image: (<img src={product.img || defalut_product_image} width={"30px"} />),
-      price: product.price,
+      name: product.name.length > 15 ? `${product.name.substring(0, 15)}...` : product.name,
+      image: (<img src={imgURL} width={"35px"} />),
+      price: `$${product.price}`,
+      category: product?.category?.name,
+      subCategory: product?.subCategory?.name,
       stock: product?.stock == 0 ? (
         <p className="text-danger">
           <b>Out Of Stock</b>

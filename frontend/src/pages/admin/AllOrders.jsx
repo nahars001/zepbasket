@@ -70,9 +70,6 @@ const AllOrders = () => {
         <button className='btn btn-primary ms-2' onClick={() => navigate(`/admin/order/${order._id}`)}>
           <i className='fa-solid fa-pencil'></i>
         </button>
-        <button className='btn btn-danger ms-2'>
-          <i className='fa-solid fa-trash'></i>
-        </button>
       </>
       ),
 

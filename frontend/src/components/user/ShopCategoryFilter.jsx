@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import Loader from "./Loader";
 
-const ShopCategoryFilter = () => {
+const ShopCategoryFilter = ({ Categories }) => {
+
   return (
     <div className="p-2">
       <Link
@@ -15,14 +17,11 @@ const ShopCategoryFilter = () => {
         <p className="mb-1">Category</p> <i class="fa-solid fa-caret-down"></i>
       </Link>
       <div class="collapse " id="filter-category">
-        <ul>
-          <li>
-            <Link href="#">Electronic</Link>
-          </li>
-          <li>
-            <Link href="#">Fashion</Link>
-          </li>
-        </ul>
+        {Categories?.map((category) => (
+          <div>
+            <input type="checkbox" name={category} id={category} /><label htmlFor={category}>{category.name}</label>
+          </div>
+        ))}
       </div>
     </div>
   );

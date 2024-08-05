@@ -296,7 +296,8 @@ a {
   padding-top: 5px;
   padding-bottom: 5px;
   width: 100%;
-  accent-color: #0dcd0f;
+  accent-color: green;
+  
 }
 .star-ratings div {
   vertical-align: top !important;
